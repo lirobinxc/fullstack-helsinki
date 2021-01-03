@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import Button from './components/Button'
 
 export default function App() {
@@ -33,11 +33,10 @@ export default function App() {
     setVotes(copy)
   }
 
-  useEffect(() => {
-    const bestQuoteIndex = votes.indexOf(Math.max(...votes))
-    const bestQuote = anecdotes[bestQuoteIndex]
-    setPopular(bestQuote)
-  }, [votes, anecdotes])
+
+  const bestQuoteIndex = votes.indexOf(Math.max(...votes))
+  const bestQuote = anecdotes[bestQuoteIndex]
+  setPopular(bestQuote)
 
   return (
     <div>
