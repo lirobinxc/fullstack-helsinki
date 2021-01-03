@@ -1,55 +1,74 @@
-import React from 'react';
-import Course from './components/Course'
+import { useState } from 'react';
+import Filter from './components/Filter'
 
 const App = () => {
-  const courses = [
-    {
-      name: 'Half Stack application development',
-      id: 1,
-      parts: [
-        {
-          name: 'Fundamentals of React',
-          exercises: 10,
-          id: 1
-        },
-        {
-          name: 'Using props to pass data',
-          exercises: 7,
-          id: 2
-        },
-        {
-          name: 'State of a component',
-          exercises: 14,
-          id: 3
-        },
-        {
-          name: 'Redux',
-          exercises: 11,
-          id: 4
-        }
-      ]
-    }, 
-    {
-      name: 'Node.js',
-      id: 2,
-      parts: [
-        {
-          name: 'Routing',
-          exercises: 3,
-          id: 1
-        },
-        {
-          name: 'Middlewares',
-          exercises: 7,
-          id: 2
-        }
-      ]
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas', phone: '040-123456' },
+    { name: 'Ada Lovelace', phone: '39-44-5323523' },
+    { name: 'Dan Abramov', phone: '12-43-234345' },
+    { name: 'Mary Poppendieck', phone: '39-23-6423122' }
+  ])
+  const [ newName, setNewName ] = useState('')
+  const [ newPhone, setNewPhone ] = useState('')
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const newObj = {
+      name: newName,
+      phone: newPhone
     }
-  ]
+
+    const namesArr = persons.map((ele, i) => {
+      return ele.name
+    })
+    const phoneArr = persons.map((ele, i) => {
+      return ele.phone
+    })
+
+
+    if (namesArr.includes(newName)) {
+      alert(`"${newName}" already exists.`);
+      return;
+    }
+    if (phoneArr.includes(newPhone)) {
+      alert(`"${newPhone}" already exists.`);
+      return;
+    }
+
+    setPersons(persons.concat(newObj))
+    setNewName('')
+  }
+
+  const handleNameChange = (event) => {
+    setNewName(event.target.value)
+  }
+  const handlePhoneChange = (event) => {
+    setNewPhone(event.target.value)
+  }
 
   return (
-    <Course course={courses} />
+    <div>
+      <h2>Phonebook</h2>
+      <Filter persons={persons} />
+      <hr />
+      <form onSubmit={handleSubmit}>
+        <div>
+          name: <input value={newName} onChange={handleNameChange} required/>
+        </div>
+        <div>
+          phone: <input value={newPhone} onChange={handlePhoneChange} required/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      
+      
+      <div>debug: {newName}</div>
+    </div>
+    
   )
 }
 
-export default App;
+export default App
