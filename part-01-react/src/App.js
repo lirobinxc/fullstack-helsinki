@@ -1,27 +1,55 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Button from './components/Button'
-import Statistics from './components/Statistics';
 
 export default function App() {
-  const [feedbackGood, setFeedbackGood] = useState(0);
-  const [feedbackNeutral, setFeedbackNeutral] = useState(0);
-  const [feedbackBad, setFeedbackBad] = useState(0);
+  const [selected, setSelected] = useState(0)
 
-  let stats;
-  const displayStats = () => {
-    if (feedbackGood > 0 || feedbackNeutral > 0 || feedbackBad > 0) {
-      stats = <Statistics good={feedbackGood} neutral={feedbackNeutral} bad={feedbackBad}/>
-    }
+  const anecdotes = [
+    '1) If it hurts, do it more often',
+    '2) Adding manpower to a late software project makes it later!',
+    '3) The first 90 percent of the code accounts for the first 90 percent of the development time.',
+    '4) Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    '5) Premature optimization is the root of all evil.',
+    '6) Debugging is twice as hard as writing the code in the first place.'
+  ]
+
+  // Create empty votes array of 0s
+  const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
+  const [popular, setPopular] = useState('')
+
+  function randomInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
   }
-  displayStats()
+
+  const handleClick = () => {
+    setSelected(randomInclusive(0, 5))
+  }
+
+  const voteUp = () => {
+    const copy = [...votes]
+    copy[selected] += 1;
+    setVotes(copy)
+  }
+
+  useEffect(() => {
+    const bestQuoteIndex = votes.indexOf(Math.max(...votes))
+    const bestQuote = anecdotes[bestQuoteIndex]
+    console.log(bestQuote)
+    setPopular(bestQuote)
+  }, [votes, anecdotes])
 
   return (
     <div>
-      <h1>Give Feedback</h1>
-      <Button onClick={() => setFeedbackGood(feedbackGood + 1)} text="Good" />
-      <Button onClick={() => setFeedbackNeutral(feedbackNeutral + 1)} text="Neutral" />
-      <Button onClick={() => setFeedbackBad(feedbackBad + 1)} text="Bad" />
-      {stats}
+      <h1>Anecdote Randomizer</h1>
+      <p>{anecdotes[selected]}</p>
+      <Button onClick={voteUp} text="Vote Up" />
+      {/* <Button onClick={voteDown} text="Vote Down" /> */}
+      <Button onClick={handleClick} text="Random Quote" />
+      <h1>Current Most Popular</h1>
+      <p>{popular}</p>
+      
     </div>
   )
 }

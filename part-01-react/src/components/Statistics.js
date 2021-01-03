@@ -23,14 +23,33 @@ export default function Statistics({good, neutral, bad}) {
   }, [bad, good, neutral])
 
   return (
-    <div>
-      <h1>Statistics</h1> 
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>TOTAL FEEDBACK COUNT: {total}</p>
-      <p>Average Feedback: {average}</p>
-      <p>Percent Positive: {positivePercent} %</p>
-    </div>
+    <table>
+      <tbody>
+        <tr>
+          <td>Good:</td>
+          <td>{good}</td>
+        </tr>
+        <tr>
+          <td>Neutral:</td>
+          <td>{neutral}</td>
+        </tr>
+        <tr>
+          <td>Bad:</td>
+          <td>{bad}</td>
+        </tr>
+        <tr>
+          <td>TOTAL FEEDBACK COUNT:</td>
+          <td>{total}</td>
+        </tr>
+        <tr>
+          <td>Average Feedback:</td>
+          <td>{average}</td>
+        </tr>
+        <tr>
+          <td>% Positive:</td>
+          <td>{positivePercent}</td>
+        </tr>
+      </tbody>
+    </table>
   )
 }
