@@ -44,6 +44,7 @@ export default function App() {
     <div>
       <h1>Anecdote Randomizer</h1>
       <p>{anecdotes[selected]}</p>
+      <p>Votes: {votes[selected]}</p>
       <Button onClick={voteUp} text="Vote Up" />
       {/* <Button onClick={voteDown} text="Vote Down" /> */}
       <Button onClick={handleClick} text="Random Quote" />
