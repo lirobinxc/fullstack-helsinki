@@ -29,7 +29,7 @@ const App = () => {
     }
 
     const nameArr = persons.map((ele, i) => ele.name.toLowerCase())
-    const numArr = persons.map((ele, i) => ele.number.toLowerCase())
+    // const numArr = persons.map((ele, i) => ele.number.toLowerCase())
 
     if (nameArr.includes(newName.toLowerCase())) {
       alert(`"${newName}" already exists.`)
