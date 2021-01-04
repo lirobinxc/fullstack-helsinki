@@ -20,7 +20,7 @@
     "pregit": "git add .",
     "git": "git commit -m",
     "postgit": "git push",
-    "server": "json-server -p3005 --watch db.json",
+    "server": "json-server -p3001 --watch db.json",
     "mon": "nodemon ./test.js"
   },
   "eslintConfig": {
