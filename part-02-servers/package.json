@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.11.8",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.6.0",
+    "axios": "^0.21.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
@@ -18,7 +19,9 @@
     "eject": "react-scripts eject",
     "pregit": "git add .",
     "git": "git commit -m",
-    "postgit": "git push"
+    "postgit": "git push",
+    "server": "json-server -p3005 --watch db.json",
+    "mon": "nodemon ./test.js"
   },
   "eslintConfig": {
     "extends": [
@@ -37,5 +40,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "json-server": "^0.16.3",
+    "nodemon": "^2.0.6"
   }
 }
