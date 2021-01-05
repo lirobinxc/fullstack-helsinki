@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -10,6 +11,14 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNum, setNewNum] = useState('')
   const [ filterName, setFilterName ] = useState('')
+
+  useEffect(() => {
+    axios.get('http://localhost:3002/persons')
+      .then(res => {
+        console.log('📣 res ~', res)
+        setPersons(res.data)
+      })
+  }, [])
 
   const handleNameInput = (event) => {
     setNewName(event.target.value)
@@ -24,16 +33,19 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const newObj = {
+      id: persons.length + 1,
       name: newName,
       number: newNum
     }
 
-    const nameArr = persons.map((ele, i) => ele.name.toLowerCase())
-    // const numArr = persons.map((ele, i) => ele.number.toLowerCase())
+    if (persons.length > 0) {
+      const nameArr = persons.map((ele, i) => ele.name.toLowerCase())
+      // const numArr = persons.map((ele, i) => ele.number.toLowerCase())
 
-    if (nameArr.includes(newName.toLowerCase())) {
-      alert(`"${newName}" already exists.`)
-      return;
+      if (nameArr.includes(newName.toLowerCase())) {
+        alert(`"${newName}" already exists.`)
+        return;
+      }
     }
 
     setPersons(persons.concat(newObj))
@@ -41,9 +53,11 @@ const App = () => {
     setNewNum('')
   }
 
-  const filteredPersons = persons.filter((ele, i) => {
-    return ele.name.toLowerCase().includes(filterName.toLowerCase()) === true;
-  })
+  const filteredPersons = persons.length > 0 
+    ? persons.filter((ele, i) => {
+        return ele.name.toLowerCase().includes(filterName.toLowerCase()) === true;
+      })
+    : [];
 
   return (
     <div>
@@ -64,7 +78,7 @@ const App = () => {
         Filter Names: <input value={filterName} onChange={handleFilterInput} />
       </div>
       {filteredPersons.map((ele, i) => {
-        return <li key={ele.name}><strong>{ele.name}</strong> - {ele.number}</li>
+        return <li key={ele.id}><strong>{ele.name}</strong> - {ele.number}</li>
       })}
     </div>
   )
