@@ -13,7 +13,7 @@ export default function Weather({ cityName }) {
     const APIkey = process.env.REACT_APP_WEATHERSTACK_APIKEY
     axios.get(`http://api.weatherstack.com/current?access_key=${APIkey}&query=${cityName}`)
     .then(res => setData(res.data))
-  }, [])
+  }, [cityName])
 
   return (
     <div>
