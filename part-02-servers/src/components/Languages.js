@@ -3,13 +3,13 @@ import ErrorBoundary from "./ErrorBoundary"
 export default function Languages(array) {
   const languagesArr = array.array;
   return(
-    <ul>
+    <div>
       {
         languagesArr.map((ele, i) => {
           console.log('📣 LANGUAGES ~')
-          return <li key={i}>{ele.name}</li>
+          return <p key={i}>{ele.name}</p>
         })
       }
-    </ul>
+    </div>
   )
 }
