@@ -1,4 +1,3 @@
-import ErrorBoundary from "./ErrorBoundary"
 
 export default function Languages(array) {
   const languagesArr = array.array;
