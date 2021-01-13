@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react'
 export default function Weather({ cityName }) {
   const [data, setData] = useState({
     current: {
-      temperature: '...',
-
+      temperature: '...'
     },
   })
 
