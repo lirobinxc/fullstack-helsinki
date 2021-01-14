@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import PhonebookListItem from './components/PhonebookListItem'
+import capitalizeName from './modules/capitalizeNameInputs'
+import serverRequests from './modules/serverRequests'
+import './index.css'
+import ErrorMessage from './components/ErrorMessage'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
+  const [personsDB, setPersonsDB] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNum, setNewNum] = useState('')
   const [ filterName, setFilterName ] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isError, setIsError] = useState(null)
+
+  const URL = 'http://localhost:3002/persons'
 
   useEffect(() => {
-    axios.get('http://localhost:3002/persons')
-      .then(res => {
-        console.log('📣 res ~', res)
-        setPersons(res.data)
-      })
+    serverRequests.get(URL)
+      .then(data => setPersonsDB(data))
   }, [])
 
   const handleNameInput = (event) => {
@@ -29,33 +29,72 @@ const App = () => {
   const handleFilterInput = (event) => {
     setFilterName(event.target.value)
   }
+  const displayErr = (msg, trueOrFalse) => {
+    setIsError(null)
+    setErrorMessage('')
+    setIsError(trueOrFalse)
+    setErrorMessage(msg)
+    setTimeout(() => {
+      setIsError(null)
+      setErrorMessage('')
+    }, 4000)
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newObj = {
-      id: persons.length + 1,
-      name: newName,
+
+    const newID = () => {
+      const idArr = personsDB.map(ele => ele.id).sort((a, b) => b - a)
+      return idArr[0] + 1
+    }
+    const newPerson = {
+      id: newID(),
+      name: capitalizeName(newName),
       number: newNum
     }
+    // Replace with new number if name exists
+    if (personsDB.length > 0) {
+      const nameArr = personsDB.map((ele, i) => ele.name.toLowerCase())  // create array if all existing names
 
-    if (persons.length > 0) {
-      const nameArr = persons.map((ele, i) => ele.name.toLowerCase())
-      // const numArr = persons.map((ele, i) => ele.number.toLowerCase())
-
-      if (nameArr.includes(newName.toLowerCase())) {
-        alert(`"${newName}" already exists.`)
-        return;
+      if (nameArr.includes(newName.toLowerCase())) {  // check if submitted name already exists
+        const confirmReplace = window.confirm(`${newName} already exists. Replace the number?`)
+        if (confirmReplace) {
+          const personReference = personsDB.find(ele => ele.name.toLowerCase() === newName.toLowerCase())
+          const copiedPerson = Object.assign({}, personReference);  // creates shallow-copy of the existing person object
+          copiedPerson.number = newNum;
+          const newPersonsDB = personsDB.filter(ele => ele.id !== copiedPerson.id)
+            .concat(copiedPerson)
+          setPersonsDB(newPersonsDB)
+          serverRequests.update(`${URL}/${copiedPerson.id}`, copiedPerson);
+          displayErr(`Successfully updated ${newName}`, false)
+        } else return;
+      } else {
+        serverRequests.create(URL, newPerson);
+        setPersonsDB(personsDB.concat(newPerson))
+        displayErr(`Successfully added ${newName}`, false)
       }
     }
-
-    setPersons(persons.concat(newObj))
     setNewName('')
     setNewNum('')
   }
 
-  const filteredPersons = persons.length > 0 
-    ? persons.filter((ele, i) => {
-        return ele.name.toLowerCase().includes(filterName.toLowerCase()) === true;
+  const handleDelete = e => {
+    const id = Number(e.target.value);
+    const person = personsDB.find(ele => ele.id === id)
+    const confirm = window.confirm(`Delete ${person.name}?`)
+
+    if (confirm) {
+      serverRequests.delete(`${URL}/${id}`, () => displayErr(`Error deleting ${person.name}! Name does not exist.`, true))
+      const newPersonsDB = personsDB.filter(ele => ele.id !== id);
+      setPersonsDB(newPersonsDB)
+      displayErr(`Successfully deleted ${person.name}`, false)
+    }
+  }
+
+  const filteredPersons = personsDB.length > 0
+    ? personsDB.filter((ele, i) => {
+        const includesName = ele.name.toLowerCase().includes(filterName.toLowerCase())
+        return includesName === true;
       })
     : [];
 
@@ -74,12 +113,16 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
+      {errorMessage ? <ErrorMessage msg={errorMessage} isError={isError ? true : false}/> : ''}
+      {/* {errorMessage ? <ErrorMessage msg={errorMessage} /> : ''} */}
       <div>
         Filter Names: <input value={filterName} onChange={handleFilterInput} />
       </div>
-      {filteredPersons.map((ele, i) => {
-        return <li key={ele.id}><strong>{ele.name}</strong> - {ele.number}</li>
-      })}
+      <ul>
+        {filteredPersons.map((ele, i) => {
+          return <PhonebookListItem key={ele.id} personObj={ele} deleteButton={handleDelete}/>
+        })}
+      </ul>
     </div>
   )
 }
