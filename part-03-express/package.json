@@ -1,0 +1,15 @@
+{
+  "name": "part-03-express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pregit": "git add .",
+    "git": "git commit -m",
+    "postgit": "git push",
+    "mon": "nodemon ./index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
