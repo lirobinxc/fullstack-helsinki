@@ -12,6 +12,16 @@ code {
     monospace;
 }
 
-.poke {
-  text-align: center;
+h2 {
+  margin: 0;
+  color: green;
+  font-style: italic;
+}
+
+.person {
+  color: darkblue;
+}
+
+.person > strong {
+  color: darkslategrey
 }

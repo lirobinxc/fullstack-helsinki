@@ -13,11 +13,12 @@ const serverRequests = {
     axios.put(url, obj)
       .then(res => res.data)
   },
-  delete: (url) => {
+  delete: (url, catchFn) => {
     axios.delete(url)
-      .then(console.log(`${url} DELETED`))
+      .then(res => res.data)
       .catch(err => {
-        alert('Deletion failed, no such persons exists.')
+        console.log('📣 ERROR ~')
+        catchFn();
       })
   }
 }

@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react'
 import PhonebookListItem from './components/PhonebookListItem'
 import capitalizeName from './modules/capitalizeNameInputs'
 import serverRequests from './modules/serverRequests'
+import './index.css'
+import ErrorMessage from './components/ErrorMessage'
 
 const App = () => {
   const [personsDB, setPersonsDB] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNum, setNewNum] = useState('')
   const [ filterName, setFilterName ] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isError, setIsError] = useState(null)
 
   const URL = 'http://localhost:3002/persons'
 
@@ -24,6 +28,16 @@ const App = () => {
   }
   const handleFilterInput = (event) => {
     setFilterName(event.target.value)
+  }
+  const displayErr = (msg, trueOrFalse) => {
+    setIsError(null)
+    setErrorMessage('')
+    setIsError(trueOrFalse)
+    setErrorMessage(msg)
+    setTimeout(() => {
+      setIsError(null)
+      setErrorMessage('')
+    }, 4000)
   }
 
   const handleSubmit = (event) => {
@@ -45,16 +59,21 @@ const App = () => {
       if (nameArr.includes(newName.toLowerCase())) {  // check if submitted name already exists
         const confirmReplace = window.confirm(`${newName} already exists. Replace the number?`)
         if (confirmReplace) {
-          const personIndex = personsDB.findIndex(ele => ele.name.toLowerCase() === newName.toLowerCase())
-          setPersonsDB([...personsDB, personsDB[personIndex].number = newNum])
-          console.log('📣 persons ~', personsDB)
-          // serverRequests.update(`${URL}/${existingPerson.id}`, existingPerson);
+          const personReference = personsDB.find(ele => ele.name.toLowerCase() === newName.toLowerCase())
+          const copiedPerson = Object.assign({}, personReference);  // creates shallow-copy of the existing person object
+          copiedPerson.number = newNum;
+          const newPersonsDB = personsDB.filter(ele => ele.id !== copiedPerson.id)
+            .concat(copiedPerson)
+          setPersonsDB(newPersonsDB)
+          serverRequests.update(`${URL}/${copiedPerson.id}`, copiedPerson);
+          displayErr(`Successfully updated ${newName}`, false)
         } else return;
       } else {
         serverRequests.create(URL, newPerson);
+        setPersonsDB(personsDB.concat(newPerson))
+        displayErr(`Successfully added ${newName}`, false)
       }
     }
-    // setPersonsDB(personsDB.concat(newPerson))
     setNewName('')
     setNewNum('')
   }
@@ -65,10 +84,10 @@ const App = () => {
     const confirm = window.confirm(`Delete ${person.name}?`)
 
     if (confirm) {
-      serverRequests.delete(`${URL}/${id}`);
-      
+      serverRequests.delete(`${URL}/${id}`, () => displayErr(`Error deleting ${person.name}! Name does not exist.`, true))
       const newPersonsDB = personsDB.filter(ele => ele.id !== id);
       setPersonsDB(newPersonsDB)
+      displayErr(`Successfully deleted ${person.name}`, false)
     }
   }
 
@@ -94,6 +113,8 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
+      {errorMessage ? <ErrorMessage msg={errorMessage} isError={isError ? true : false}/> : ''}
+      {/* {errorMessage ? <ErrorMessage msg={errorMessage} /> : ''} */}
       <div>
         Filter Names: <input value={filterName} onChange={handleFilterInput} />
       </div>
