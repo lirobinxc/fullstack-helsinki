@@ -1,0 +1,23 @@
+{
+  "name": "fullstack-helsinki",
+  "version": "1.0.0",
+  "description": "## Topics Covered",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pregit": "git add .",
+    "git": "git commit -m",
+    "postgit": "git push",
+    "mon": "nodemon ./test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lirobinxc/fullstack-helsinki.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lirobinxc/fullstack-helsinki/issues"
+  },
+  "homepage": "https://github.com/lirobinxc/fullstack-helsinki#readme"
+}
