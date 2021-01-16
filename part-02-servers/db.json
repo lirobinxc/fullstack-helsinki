@@ -1,8 +1,18 @@
 {
   "persons": [
     {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
+      "name": "Dan",
+      "number": "12345",
+      "id": 1
+    },
+    {
+      "name": "Robin",
+      "number": "76556",
+      "id": 2
+    },
+    {
+      "name": "Mia",
+      "number": "009887",
       "id": 3
     }
   ]

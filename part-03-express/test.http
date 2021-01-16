@@ -1,0 +1,19 @@
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "name": "Boboku",
+  "content": "Ohaiyo!"
+}
+
+### POST with No content
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "name": "Boboku",
+  "content": ""
+}
+
+### DELETE
+DELETE http://localhost:3001/api/notes/3
