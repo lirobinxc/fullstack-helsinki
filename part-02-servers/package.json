@@ -17,11 +17,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "pregit": "git add .",
-    "git": "git commit -m",
-    "postgit": "git push",
+    "git": "git add . && git commit -m minor-changes && git push",
     "jsonserver": "json-server -p3001 --watch db.json",
-    "mon": "nodemon ./test.js"
+    "mon": "nodemon ./test.js",
+    "prod": "npm run build && rm -rf ~/LiCode/heroku-phonebook-api/build && cp -r ./build ~/LiCode/heroku-phonebook-api"
   },
   "eslintConfig": {
     "extends": [

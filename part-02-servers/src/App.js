@@ -13,7 +13,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [isError, setIsError] = useState(null)
 
-  const URL = 'http://localhost:3002/persons'
+  const URL = 'https://phonebook-api-lirobinxc.herokuapp.com/api/persons'
 
   useEffect(() => {
     serverRequests.get(URL)
@@ -42,13 +42,7 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    const newID = () => {
-      const idArr = personsDB.map(ele => ele.id).sort((a, b) => b - a)
-      return idArr[0] + 1
-    }
     const newPerson = {
-      id: newID(),
       name: capitalizeName(newName),
       number: newNum
     }
@@ -70,7 +64,9 @@ const App = () => {
         } else return;
       } else {
         serverRequests.create(URL, newPerson);
-        setPersonsDB(personsDB.concat(newPerson))
+        serverRequests.get(URL)
+          .then(data => setPersonsDB(data))
+        // setPersonsDB(personsDB.concat(newPerson)) // doesn't work because id is generated in backend
         displayErr(`Successfully added ${newName}`, false)
       }
     }
