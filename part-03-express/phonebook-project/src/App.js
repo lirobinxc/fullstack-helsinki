@@ -5,9 +5,6 @@ import serverRequests from './modules/serverRequests'
 import './index.css'
 import ErrorMessage from './components/ErrorMessage'
 
-const mongoPW = process.env.REACT_APP_MONGOOSE_PW
-export { mongoPW }
-
 const App = () => {
   const [personsDB, setPersonsDB] = useState([])
   const [ newName, setNewName ] = useState('')
@@ -17,7 +14,6 @@ const App = () => {
   const [isError, setIsError] = useState(null)
 
   const URL = 'http://localhost:3001/api/persons'
-  console.log(`📣 ENV ~`, process.env.REACT_APP_MONGOOSE_PW)
 
   useEffect(() => {
     serverRequests.get(URL)
@@ -48,13 +44,12 @@ const App = () => {
     event.preventDefault();
 
     // const newID = () => {
-    //   const idArr = personsDB.map(ele => ele._id).sort((a, b) => b - a)
+    //   const idArr = personsDB.map(ele => ele.id).sort((a, b) => b - a)
     //   return idArr[0] + 1
     // }
     const newPerson = {
-      // _id: newID(),
       name: capitalizeName(newName),
-      number: newNum
+      number: String(newNum)
     }
     // Replace with new number if name exists
     if (personsDB.length > 0) {
@@ -66,10 +61,10 @@ const App = () => {
           const personReference = personsDB.find(ele => ele.name.toLowerCase() === newName.toLowerCase())
           const copiedPerson = Object.assign({}, personReference);  // creates shallow-copy of the existing person object
           copiedPerson.number = newNum;
-          const newPersonsDB = personsDB.filter(ele => ele._id !== copiedPerson._id)
+          const newPersonsDB = personsDB.filter(ele => ele.id !== copiedPerson.id)
             .concat(copiedPerson)
           setPersonsDB(newPersonsDB)
-          serverRequests.update(`${URL}/${copiedPerson._id}`, copiedPerson);
+          serverRequests.update(`${URL}/${copiedPerson.id}`, copiedPerson);
           displayErr(`Successfully updated ${newName}`, false)
         } else return;
       } else {
@@ -77,21 +72,31 @@ const App = () => {
         setPersonsDB(personsDB.concat(newPerson))
         displayErr(`Successfully added ${newName}`, false)
       }
+    } else {
+      serverRequests.create(URL, newPerson);
+      setPersonsDB(personsDB.concat(newPerson))
+      displayErr(`Successfully added ${newName}`, false)
     }
     setNewName('')
     setNewNum('')
   }
 
   const handleDelete = e => {
-    const id = Number(e.target.value);
-    const person = personsDB.find(ele => ele._id === id)
+    const id = e.target.value;
+    console.log(`📣 id ~`, id)
+    const person = personsDB.find(ele => ele.id === id)
     const confirm = window.confirm(`Delete ${person.name}?`)
 
     if (confirm) {
-      serverRequests.delete(`${URL}/${id}`, () => displayErr(`Error deleting ${person.name}! Name does not exist.`, true))
-      const newPersonsDB = personsDB.filter(ele => ele._id !== id);
-      setPersonsDB(newPersonsDB)
-      displayErr(`Successfully deleted ${person.name}`, false)
+      try {
+        serverRequests.delete(`${URL}/${id}`, () => displayErr(`Error deleting ${person.name}`, true))
+        const newPersonsDB = personsDB.filter(ele => ele.id !== id);
+        setPersonsDB(newPersonsDB)
+        displayErr(`Successfully deleted ${person.name}`, false)
+      } catch (err) {
+          console.log(`📣 error ~`, err)
+      }
+      
     }
   }
 
@@ -123,7 +128,7 @@ const App = () => {
       </div>
       <ul>
         {filteredPersons.map((ele, i) => {
-          return <PhonebookListItem key={ele._id} personObj={ele} deleteButton={handleDelete}/>
+          return <PhonebookListItem key={ele.id} personObj={ele} deleteButton={handleDelete}/>
         })}
       </ul>
     </div>

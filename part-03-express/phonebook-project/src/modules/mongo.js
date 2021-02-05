@@ -20,16 +20,6 @@ const personSchema = new mongoose.Schema({
 
 const Person = new mongoose.model('Person', personSchema)
 
-// DELETE function
-// if (personName === "delete") {
-//   Person.deleteOne({name: personNum})
-//     .then(result => {
-//       mongoose.connection.close();
-//       console.log(`Deleted ${personNum}!`)
-//       process.exit(0);
-//     })
-// }
-
 if (process.argv.length === 4) {
   Person.find({})
     .then(result => {
