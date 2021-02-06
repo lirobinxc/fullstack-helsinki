@@ -6,12 +6,10 @@ const serverRequests = {
       .then(res => res.data)
   },
   create: (url, obj) => {
-    axios.post(url, obj)
-      .then(res => res.data)
+    return axios.post(url, obj)
   },
   update: (url, obj) => {
-    axios.put(url, obj)
-      .then(res => res.data)
+    return axios.put(url, obj)
   },
   delete: (url, catchFn) => {
     axios.delete(url)

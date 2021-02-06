@@ -13,7 +13,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [isError, setIsError] = useState(null)
 
-  const URL = 'http://localhost:3001/api/persons'
+  const URL = 'https://phonebook-api-lirobinxc.herokuapp.com/api/persons'
 
   useEffect(() => {
     serverRequests.get(URL)
@@ -61,21 +61,44 @@ const App = () => {
           const personReference = personsDB.find(ele => ele.name.toLowerCase() === newName.toLowerCase())
           const copiedPerson = Object.assign({}, personReference);  // creates shallow-copy of the existing person object
           copiedPerson.number = newNum;
-          const newPersonsDB = personsDB.filter(ele => ele.id !== copiedPerson.id)
-            .concat(copiedPerson)
-          setPersonsDB(newPersonsDB)
-          serverRequests.update(`${URL}/${copiedPerson.id}`, copiedPerson);
-          displayErr(`Successfully updated ${newName}`, false)
+          // const newPersonsDB = personsDB.filter(ele => ele.id !== copiedPerson.id)
+          //   .concat(copiedPerson)
+          // // setPersonsDB(newPersonsDB)
+          serverRequests.update(`${URL}/${copiedPerson.id}`, copiedPerson)
+            .then(data => {
+              setPersonsDB(personsDB.concat(newPerson))
+              displayErr(`Successfully updated ${newName}`, false)
+            })
+            .catch(err => {
+              console.log(`📣 ERR ~`, err)
+              displayErr(`Error updating ${newName}: number (min 8 digits)`, true)
+            })
         } else return;
       } else {
-        serverRequests.create(URL, newPerson);
-        setPersonsDB(personsDB.concat(newPerson))
-        displayErr(`Successfully added ${newName}`, false)
+        serverRequests.create(URL, newPerson)
+        .then(data => {
+          const temp = JSON.parse(data)
+          console.log(`📣 temp ~`, temp)
+          setPersonsDB(personsDB.concat(newPerson))
+          displayErr(`Successfully added ${newName}`, false)
+        })
+        .catch(err => {
+          console.log(`📣 ERR ~`, err)
+          displayErr(`Error adding ${newName}: name (min 3 char), number (min 8 digits)`, true)
+        })
       }
     } else {
-      serverRequests.create(URL, newPerson);
-      setPersonsDB(personsDB.concat(newPerson))
-      displayErr(`Successfully added ${newName}`, false)
+      serverRequests.create(URL, newPerson)
+        .then(data => {
+          const temp = JSON.parse(data)
+          console.log(`📣 temp ~`, temp)
+          setPersonsDB(personsDB.concat(newPerson))
+          displayErr(`Successfully added ${newName}`, false)
+        })
+        .catch(err => {
+          console.log(`📣 ERR ~`, err)
+          displayErr(`Error adding ${newName}: name (min 3 char), number (min 8 digits)`, true)
+        })
     }
     setNewName('')
     setNewNum('')
