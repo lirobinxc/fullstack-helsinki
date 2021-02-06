@@ -20,6 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "rm -rf /home/lirobinxc/LiCode/heroku-phonebook-api/build/ && cp -r /home/lirobinxc/LiCode/fullstack-helsinki/part-03-express/phonebook-project/build /home/lirobinxc/LiCode/heroku-phonebook-api",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "mongo": "node ./src/modules/mongo.js pokemon123 phonebook"
