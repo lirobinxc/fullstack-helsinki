@@ -5,7 +5,7 @@ const requestLogger = (req, res, next) => {
   logger.info('Method:', req.method)
   logger.info('Path:', req.path)
   logger.info('Body:', req.body)
-  logger.info('---------------')
+  logger.info('===============')
   next()
 }
 
@@ -16,8 +16,6 @@ const unknownEndpoint = (req, res, next) => {
 const errorHandler = (err, req, res, next) => {
   logger.error('----❌ERROR❌----')
   logger.error(err.message)
-  res.status(400).send({ error: err })
-  logger.error('-----------------')
 
   if (err.name === 'CastError' && err.kind === 'ObjectId') {
     return res.status(400).send({ error: 'malformatted id' })
@@ -25,11 +23,11 @@ const errorHandler = (err, req, res, next) => {
     return res.status(400).json({ error: err.message })
   }
 
-  next()
+  next(err)
 }
 
 const errorHandlerFinal = (err, req, res, next) => {
-  res.status(400).send({ error: 'Something went wrong' })
+  res.status(400).send({ error: `${err.name} - ${err.message}` })
 }
 
 module.exports = {
