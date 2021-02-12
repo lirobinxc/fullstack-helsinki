@@ -1,4 +1,4 @@
-const { mostLikedAuthor } = require('../utils/list-helper')
+const { mostLikedAuthor } = require('../../utils/list-helper')
 
 describe('mostLikedAuthor', () => {
 
