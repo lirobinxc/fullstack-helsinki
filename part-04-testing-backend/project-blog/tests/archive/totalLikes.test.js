@@ -1,4 +1,4 @@
-const { totalLikes } = require('../utils/list-helper')
+const { totalLikes } = require('../../utils/list-helper')
 
 describe('totalLikes', () => {
   test('of empty array', () => {

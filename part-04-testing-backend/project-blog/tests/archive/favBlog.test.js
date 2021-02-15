@@ -1,4 +1,4 @@
-const { favBlog } = require('../utils/list-helper')
+const { favBlog } = require('../../utils/list-helper')
 
 describe('favBlog', () => {
 

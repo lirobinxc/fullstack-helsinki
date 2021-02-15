@@ -27,7 +27,7 @@ const errorHandler = (err, req, res, next) => {
 }
 
 const errorHandlerFinal = (err, req, res, next) => {
-  res.status(400).send({ error: `${err.name} - ${err.message}` })
+  res.status(400).send({ finalError: `${err.name} - ${err.message}` })
 }
 
 module.exports = {

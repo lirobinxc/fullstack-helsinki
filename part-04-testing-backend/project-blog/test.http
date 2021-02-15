@@ -11,6 +11,15 @@ Content-Type: application/json
   "likes": 12
 }
 
+### PUT
+PUT http://localhost:3001/api/blogs/5a422a851b54a676234d17f7
+Content-Type: application/json
+
+{
+  "title": "God I love cats",
+  "likes": 42069
+}
+
 ### Unknown endpoint
 GET http://localhost:3001/api/wtf
 
