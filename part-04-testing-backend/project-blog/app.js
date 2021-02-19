@@ -3,10 +3,12 @@ const app = express()
 const cors = require('cors')
 const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogsRouter')
+const usersRouter = require('./controllers/usersRouter')
 
 app.use(express.json())
 app.use(middleware.requestLogger)
 
+app.use('/api/users', usersRouter)
 app.use('/api/blogs', blogsRouter)
 
 app.use(middleware.unknownEndpoint)

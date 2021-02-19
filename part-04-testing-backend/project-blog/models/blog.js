@@ -10,6 +10,12 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, us
   .catch(err => logger.error('❌ Connection Error!', err.message))
 
 const blogSchema = new mongoose.Schema({
+  user: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ],
   title: {
     type: String,
     minLength: 5,
@@ -21,7 +27,7 @@ const blogSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  likes: Number
+  likes: Number,
 })
 blogSchema.plugin(uniqueValidator)
 
