@@ -4,6 +4,7 @@ const supertest = require('supertest')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const helper = require('./test-helper')
+const { BEARER_TOKEN } = require('../utils/config')
 
 let api;
 beforeAll(() => {
@@ -49,7 +50,7 @@ describe("POST request to /api/blogs", () => {
   
     await api
       .post('/api/blogs')
-      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
+      .set('Authorization', BEARER_TOKEN)
       .send(newBlogPost)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -67,7 +68,7 @@ describe("POST request to /api/blogs", () => {
   
     const postResponse = await api
       .post('/api/blogs')
-      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
+      .set('Authorization', BEARER_TOKEN)
       .send(newBlogPost)
   
     expect(postResponse.body.likes)
@@ -81,7 +82,7 @@ describe("POST request to /api/blogs", () => {
   
     const postResponse = await api
       .post('/api/blogs')
-      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
+      .set('Authorization', BEARER_TOKEN)
       .send(newBlogPost)
       .expect(400)
   })
@@ -96,7 +97,7 @@ describe('PUT request to /api/blogs/:id', () => {
     }
     await api
       .put(`/api/blogs/${id}`)
-      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
+      .set('Authorization', BEARER_TOKEN)
       .send(updateBody)
       .expect(200)
 
@@ -113,7 +114,7 @@ describe('PUT request to /api/blogs/:id', () => {
     }
     await api
       .put(`/api/blogs/${id}`)
-      .set('Authorization', 'bearer xyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
+      .set('Authorization', 'bearer asdfsadfsadf')
       .send(updateBody)
       .expect(401)
   })
@@ -124,7 +125,7 @@ describe('DELETE request to /api/blogs/:id', () => {
     const id = '5a422a851b54a676234d17f7'
     const deleteResponse = await api
       .delete(`/api/blogs/${id}`)
-      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
+      .set('Authorization', BEARER_TOKEN)
       .expect(204)
 
     const getResponse = await api.get('/api/blogs')
@@ -135,7 +136,7 @@ describe('DELETE request to /api/blogs/:id', () => {
     const id = '5a422a851b54a676234d17f7'
     const deleteResponse = await api
       .delete(`/api/blogs/${id}`)
-      .set('Authorization', 'bearer xyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
+      .set('Authorization', 'bearer asdfasdf')
       .expect(401)
   })
 })
