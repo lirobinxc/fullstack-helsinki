@@ -1,19 +1,33 @@
 GET http://localhost:3001/api/blogs
 
-### POST
+### POST as Lily
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ
 
 {
-  "title": "Lily's Blog",
-  "author": "Lily Z",
-  "url": "www.lilyisdabest.com",
+  "title": "1 Blog",
+  "author": "1 Zdsa",
+  "url": "www.1.com",
+  "likes": 12
+}
+
+### POST as Bob
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYmJ5MSIsImlkIjoiNjAzMDZkNmYwYjQ2NTY3M2FkN2E5MmYyIiwiaWF0IjoxNjEzNzg2NDg3fQ.7p83M0MM8khlm3HxefhzKD2Sm0g_bXfy2YdsXimucbg
+
+{
+  "title": "162 Blog",
+  "author": "341 Zdsa",
+  "url": "www.143.com",
   "likes": 12
 }
 
 ### PUT
 PUT http://localhost:3001/api/blogs/5a422a851b54a676234d17f7
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ
 
 {
   "title": "God I love cats",
@@ -34,5 +48,10 @@ Content-Type: application/json
   "likes": 12
 }
 
-### DELETE blog
-DELETE http://localhost:3001/api/blogs/5a422aa71b54a676234d17f8
+### DELETE blog (as Lily)
+DELETE http://localhost:3001/api/blogs/60306dc80b465673ad7a92f4
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ
+
+### DELETE blog (as Bob)
+DELETE http://localhost:3001/api/blogs/60306a04013599727fe85339
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYmJ5MSIsImlkIjoiNjAzMDZkNmYwYjQ2NTY3M2FkN2E5MmYyIiwiaWF0IjoxNjEzNzg2NDg3fQ.7p83M0MM8khlm3HxefhzKD2Sm0g_bXfy2YdsXimucbg

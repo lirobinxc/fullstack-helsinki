@@ -3,20 +3,39 @@ POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
+  "username": "bobby1",
+  "name": "Bobby Wun",
+  "password": "bobbyrulez"
+}
+
+### LOGIN as Lily
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
   "username": "lilyz92",
-  "name": "Lily Z",
   "password": "chocolate123"
 }
+
+### LOGIN as Bob
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "bobby1",
+  "password": "bobbyrulez"
+}
+
 
 ### Create new user ERROR: username / password too short
 POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-  "username": "mialein92+",
+  "username": "miaasdflein92+",
   "name": "Mifa Lin",
-  "password": "chfdfeas"
+  "password": "chfasfdfeas"
 }
 
 ### DELETE user
-DELETE http://localhost:3001/api/users/603048ba51c2c25243183a8e
+DELETE http://localhost:3001/api/users/603048f03e19ae5277e2745a

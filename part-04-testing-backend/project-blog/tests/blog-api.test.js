@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const app = require('../app')
 const supertest = require('supertest')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test-helper')
 
 let api;
@@ -11,8 +12,12 @@ beforeAll(() => {
 
 beforeEach(async () => {
   await Blog.deleteMany({})
+  const user = await User.findById("603047fcfd6eb851d7628652")
 
-  for(let blog of helper.blogsArr) {
+  for (let blog of helper.blogsArr) {
+    if (!blog.user || blog.user.length === 0) {
+      blog.user = [].concat(user._id)
+    }
     const newBlog = new Blog(blog)
     await newBlog.save()
   }
@@ -44,6 +49,7 @@ describe("POST request to /api/blogs", () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
       .send(newBlogPost)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -61,6 +67,7 @@ describe("POST request to /api/blogs", () => {
   
     const postResponse = await api
       .post('/api/blogs')
+      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
       .send(newBlogPost)
   
     expect(postResponse.body.likes)
@@ -74,13 +81,14 @@ describe("POST request to /api/blogs", () => {
   
     const postResponse = await api
       .post('/api/blogs')
+      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
       .send(newBlogPost)
       .expect(400)
   })
 })
 
 describe('PUT request to /api/blogs/:id', () => {
-  test('succeeds if $id is valid', async () => {
+  test('succeeds if $id & token is valid', async () => {
     const id = '5a422a851b54a676234d17f7'
     const updateBody = {
       title: "God, I love melons!",
@@ -88,6 +96,7 @@ describe('PUT request to /api/blogs/:id', () => {
     }
     await api
       .put(`/api/blogs/${id}`)
+      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
       .send(updateBody)
       .expect(200)
 
@@ -95,17 +104,39 @@ describe('PUT request to /api/blogs/:id', () => {
     const updatedBlog = getResponse.body.find(ele => ele.id === '5a422a851b54a676234d17f7')
     expect(updatedBlog.likes).toBe(42069)
   })
+
+  test('fails if $id is valid but token is invalid', async () => {
+    const id = '5a422a851b54a676234d17f7'
+    const updateBody = {
+      title: "God, I love melons!",
+      likes: 42069
+    }
+    await api
+      .put(`/api/blogs/${id}`)
+      .set('Authorization', 'bearer xyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
+      .send(updateBody)
+      .expect(401)
+  })
 })
 
 describe('DELETE request to /api/blogs/:id', () => {
-  test('succeeds if $id is valid', async () => {
+  test('succeeds if $id is valid & token is valid', async () => {
     const id = '5a422a851b54a676234d17f7'
     const deleteResponse = await api
       .delete(`/api/blogs/${id}`)
+      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
       .expect(204)
 
     const getResponse = await api.get('/api/blogs')
     expect(getResponse.body).toHaveLength(helper.blogsArr.length - 1)  
+  })
+
+  test('fails if $id is valid but token is invalid', async () => {
+    const id = '5a422a851b54a676234d17f7'
+    const deleteResponse = await api
+      .delete(`/api/blogs/${id}`)
+      .set('Authorization', 'bearer xyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxpbHl6OTIiLCJpZCI6IjYwMzA0N2ZjZmQ2ZWI4NTFkNzYyODY1MiIsImlhdCI6MTYxMzc3OTYxOH0.0vRlzjdQJNJjuQx5aK3cDGOXyCtaf7gQQs-1KhuCXDQ')
+      .expect(401)
   })
 })
 
