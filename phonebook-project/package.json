@@ -1,0 +1,49 @@
+{
+  "name": "phonebook-project",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.6.3",
+    "axios": "^0.21.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.14",
+    "morgan": "^1.10.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.1",
+    "web-vitals": "^0.2.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "postbuild": "rm -rf /home/lirobinxc/LiCode/heroku-phonebook-api/build/ && cp -r /home/lirobinxc/LiCode/fullstack-helsinki/part-03-express/phonebook-project/build /home/lirobinxc/LiCode/heroku-phonebook-api",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "mongo": "node ./src/modules/mongo.js pokemon123 phonebook",
+    "pregit": "git add .",
+    "git": "git commit -m",
+    "postgit": "git push"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
