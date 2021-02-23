@@ -4,6 +4,7 @@ import capitalizeName from './modules/capitalizeNameInputs'
 import serverRequests from './modules/serverRequests'
 import './index.css'
 import ErrorMessage from './components/ErrorMessage'
+import loginService from './services/login'
 
 const App = () => {
   const [personsDB, setPersonsDB] = useState([])
@@ -14,6 +15,7 @@ const App = () => {
   const [isError, setIsError] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
 
   const URL = 'https://phonebook-api-lirobinxc.herokuapp.com/api/persons'
 
@@ -132,6 +134,21 @@ const App = () => {
     setPassword(e.target.value)
   }
 
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    try {
+      const user = await loginService.login({
+        username, password
+      })
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch(err) {
+      console.log(err)
+      displayErr('Wrong Credentials', true)
+  }
+}
+
   const filteredPersons = personsDB.length > 0
     ? personsDB.filter((ele, i) => {
         const includesName = ele.name.toLowerCase().includes(filterName.toLowerCase())
@@ -149,6 +166,7 @@ const App = () => {
         <div>
           Password: <input type="text" value={password} name="Password" onChange={handlePasswordInput}/>
         </div>
+        <button type="submit" onClick={handleLogin}>Login</button>
       </form>
       <h2>Phonebook</h2>
       <form onSubmit={handleSubmit}>

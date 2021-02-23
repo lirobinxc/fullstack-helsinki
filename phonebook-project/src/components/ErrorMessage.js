@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function ErrorMessage({ msg, isError }) {
   const successStyle = {
     border: "2px solid green",
