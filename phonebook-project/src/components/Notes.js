@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import PhonebookListItem from '../components/PhonebookListItem'
+import PhonebookListItem from './PhonebookListItem'
 import capitalizeName from '../modules/capitalizeNameInputs'
 import serverRequests from '../modules/serverRequests'
 import '../index.css'
-import ErrorMessage from '../components/ErrorMessage'
+import ErrorMessage from './ErrorMessage'
 
 const Notes = () => {
+
+  const [ personsDB, setPersonsDB] = useState([])
+  const [ newName, setNewName ] = useState('')
+  const [ newNum, setNewNum ] = useState('')
+  const [ filterName, setFilterName ] = useState('')
+  const [ errorMessage, setErrorMessage ] = useState('')
+  const [ isError, setIsError ] = useState(null)
 
   const URL = 'https://phonebook-api-lirobinxc.herokuapp.com/api/persons'
 

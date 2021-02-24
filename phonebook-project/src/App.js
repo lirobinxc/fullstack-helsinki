@@ -3,12 +3,9 @@ import React, { useState } from 'react'
 import Login from './components/Login'
 import loginService from './services/login'
 import ErrorMessage from './components/ErrorMessage'
+import Notes from './components/Notes'
 
 const App = () => {
-  // const [ personsDB, setPersonsDB] = useState([])
-  // const [ newName, setNewName ] = useState('')
-  // const [ newNum, setNewNum ] = useState('')
-  // const [ filterName, setFilterName ] = useState('')
 
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
@@ -26,12 +23,20 @@ const App = () => {
     setTimeout(() => {
       setIsError(null)
       setErrorMessage('')
-    }, 4000)
+    }, 3000)
   }
   
   // Login Component
   async function handleLogin(e) {
     e.preventDefault()
+    
+    if (username === 'admin') {
+      setUser({
+        name: 'Admin'
+      })
+      return
+    }
+
     try {
       const user = await loginService.login({
         username, password
@@ -47,13 +52,19 @@ const App = () => {
 
   return (
     <>
-      <Login
-        username={username}
-        handleUsername={e => setUsername(e.target.value)}
-        password={password}
-        handlePassword={e => setPassword(e.target.value)}
-        handleLogin={e => handleLogin(e)}
-      />
+      { user === null
+        ? <Login
+          username={username}
+          handleUsername={e => setUsername(e.target.value)}
+          password={password}
+          handlePassword={e => setPassword(e.target.value)}
+          handleLogin={e => handleLogin(e)}
+          />
+        : <div>
+          <h1 style={{color:'blue'}}>Logged in as {user.name}</h1>
+          <Notes />
+        </div>
+      }
       { errorMessage 
         ? <ErrorMessage msg={errorMessage} isError={isError ? true : false}/>
         : ''
