@@ -8,7 +8,7 @@ const usersRouter = require('./controllers/usersRouter')
 
 app.use(express.json())
 app.use(middleware.requestLogger)
-app.use(middleware.getTokenFrom)
+app.use(middleware.tokenExtractor)
 app.use(cors())
 
 app.get('/api', (req, res) => {

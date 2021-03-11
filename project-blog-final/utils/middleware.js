@@ -32,7 +32,7 @@ const errorHandlerFinal = (err, req, res, next) => {
   res.status(400).send({ finalError: `${err.name} - ${err.message}` })
 }
 
-const getTokenFrom = (req, res, next) => {
+const tokenExtractor = (req, res, next) => {
   const auth = req.headers.authorization
   if (auth && auth.toLowerCase().startsWith('bearer ')) {
     req.token = auth.substring(7)
@@ -45,5 +45,5 @@ module.exports = {
   unknownEndpoint,
   errorHandler,
   errorHandlerFinal,
-  getTokenFrom
+  tokenExtractor
 }
