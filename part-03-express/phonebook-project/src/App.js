@@ -12,6 +12,8 @@ const App = () => {
   const [ filterName, setFilterName ] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [isError, setIsError] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const URL = 'https://phonebook-api-lirobinxc.herokuapp.com/api/persons'
 
@@ -123,6 +125,13 @@ const App = () => {
     }
   }
 
+  const handleUsernameInput = (e) => {
+    setUsername(e.target.value)
+  }
+  const handlePasswordInput = (e) => {
+    setPassword(e.target.value)
+  }
+
   const filteredPersons = personsDB.length > 0
     ? personsDB.filter((ele, i) => {
         const includesName = ele.name.toLowerCase().includes(filterName.toLowerCase())
@@ -132,6 +141,16 @@ const App = () => {
 
   return (
     <div>
+      <h2>Login</h2>
+      <form>
+        <div>
+          Username: <input type="text" value={username} name="Username" onChange={handleUsernameInput}/>
+        </div>
+        <div>
+          Password: <input type="text" value={password} name="Password" onChange={handlePasswordInput}/>
+        </div>
+        <button type="submit">Login</button>
+      </form>
       <h2>Phonebook</h2>
       <form onSubmit={handleSubmit}>
         <div>
