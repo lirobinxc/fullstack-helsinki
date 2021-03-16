@@ -1,6 +1,17 @@
 import React from 'react'
+import blogService from '../services/blogService'
 
-const Blog = ({ blogObj, handleDelete }) => {
+const Blog = ({ blogObj, toggleUpdateBlogs, handleErrorMsg }) => {
+
+  const handleDelete = async (e) => {
+    const id = e.target.name
+    try {
+      await blogService.deleteBlog(id)
+      toggleUpdateBlogs()
+    } catch(err) {
+      handleErrorMsg()
+    }
+  }
 
   return (
     <li>

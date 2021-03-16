@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogService'
 import ErrorMessage from '../components/ErrorMessage'
+import blogService from '../services/blogService'
 
-const AddBlog = ({ user, setAddedBlog }) => {
+const AddBlog = ({ toggleUpdateBlogs }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -15,22 +15,13 @@ const AddBlog = ({ user, setAddedBlog }) => {
       author,
       url
     }
-    console.log(`📣 AddBlog- user ~`, user)
-    console.log(`📣 token ~`, user.token)
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `bearer ${user.token}`
-    }
     try {
-      const newBlog = await blogService.postBlog(blogData, headers)
+      const newBlog = await blogService.postBlog(blogData)
       console.log(`📣 newBlog ~`, newBlog)
-      setAddedBlog(true)
-      setTimeout(() => {
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-        setAddedBlog(false)
-      }, 3000)
+      toggleUpdateBlogs()
+      setTitle('')
+      setAuthor('')
+      setUrl('')
     } catch(err) {
       setErrorMsg('Could not post the blog, something went wrong')
       setTimeout(() => {
@@ -41,15 +32,16 @@ const AddBlog = ({ user, setAddedBlog }) => {
 
   return (
     <div>
+      <h2>Add Blog</h2>
       {
         errorMsg === ''
           ? null
           : <ErrorMessage msg={errorMsg} />
       }
       <form onSubmit={handleSubmit}>
-        Title: <input type="text" name="blogTitle" onChange={e => setTitle(e.target.value)} /> <br/>
-        Author: <input type="text" name="blogAuthor" onChange={e => setAuthor(e.target.value)} /> <br/>
-        URL: <input type="text" name="blogUrl" onChange={e => setUrl(e.target.value)} /> <br/>
+        Title: <input type="text" name="blogTitle" value={title} onChange={(e) => setTitle(e.target.value)} /> <br/>
+        Author: <input type="text" name="blogAuthor" value={author} onChange={(e) => setAuthor(e.target.value)} /> <br/>
+        URL: <input type="text" name="blogUrl" value={url} onChange={(e) => setUrl(e.target.value)} /> <br/>
         <input type="submit" />
       </form>
     </div>

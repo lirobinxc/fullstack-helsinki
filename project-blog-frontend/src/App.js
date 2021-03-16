@@ -3,6 +3,9 @@ import blogService from './services/blogService'
 import Blog from './components/Blog'
 import loginService from './services/loginService'
 import ErrorMessage from './components/ErrorMessage'
+import LoginForm from './components/LoginForm'
+import Toggleable from './components/Toggleable'
+import AddBlog from './components/AddBlog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -10,11 +13,11 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
-  const [changedBlogs, setChangedBlogs] = useState(false)
-  // * States for Add Blog section *
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [updateBlogs, setUpdateBlogs] = useState(false)
+  // // * States for Add Blog section *
+  // const [title, setTitle] = useState('')
+  // const [author, setAuthor] = useState('')
+  // const [url, setUrl] = useState('')
 
   useEffect(() => {
     const localUserData = JSON.parse(window.localStorage.getItem('blogUser'))
@@ -29,45 +32,7 @@ const App = () => {
     .then(
       data => setBlogs(data)
       )
-    }, [changedBlogs])
-
-  const handleAddBlogSubmit = async (e) => {
-    e.preventDefault()
-    const blogData = {
-      title,
-      author,
-      url
-    }
-    try {
-      const newBlog = await blogService.postBlog(blogData)
-      console.log(`📣 newBlog ~`, newBlog)
-      setChangedBlogs(!changedBlogs)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-    } catch(err) {
-      setErrorMsg('Could not post the blog, something went wrong')
-      setTimeout(() => {
-        setErrorMsg('')
-      }, 2500)
-    }
-  }
-  
-  const addBlogSection = () => (
-    <div>
-      {
-        errorMsg === ''
-          ? null
-          : <ErrorMessage msg={errorMsg} />
-      }
-      <form onSubmit={handleAddBlogSubmit}>
-        Title: <input type="text" name="blogTitle" value={title} onChange={e => setTitle(e.target.value)} /> <br/>
-        Author: <input type="text" name="blogAuthor" value={author} onChange={e => setAuthor(e.target.value)} /> <br/>
-        URL: <input type="text" name="blogUrl" value={url} onChange={e => setUrl(e.target.value)} /> <br/>
-        <input type="submit" />
-      </form>
-    </div>
-  )
+    }, [updateBlogs])
     
   const handleLoginSubmit = async (e) => {
     e.preventDefault()
@@ -101,7 +66,7 @@ const App = () => {
     const id = e.target.name
     try {
       await blogService.deleteBlog(id)
-      setChangedBlogs(!changedBlogs)
+      setUpdateBlogs(!updateBlogs)
     } catch(err) {
       setErrorMsg('Problem deleting the blog.')
       setTimeout(() => {
@@ -110,20 +75,28 @@ const App = () => {
     }
   }
 
+  function toggleUpdateBlogs() {
+    setUpdateBlogs(!updateBlogs)
+  }
+
   if (user === null) {
     return (
       <div>
+        <h1>Blogs App</h1>
         {
           errorMsg === ''
             ? null
             : <ErrorMessage msg={errorMsg} />
         }
-        <h1>Login</h1>
-        <form onSubmit={handleLoginSubmit}>
-          Username: <input type="text" name="username" onChange={(e) => setUsername(e.target.value)} /> <br/>
-          Password: <input type="password" name="password" onChange={(e) => setPassword(e.target.value)} /> <br/>
-          <input type="submit" value="Submit"/>
-        </form>
+        <Toggleable buttonLabel="Login">
+          <LoginForm 
+            username={username}
+            password={password}
+            handleUsername={(e) => {setUsername(e.target.value)}}
+            handlePassword={(e) => {setPassword(e.target.value)}}
+            handleLoginSubmit={handleLoginSubmit}
+          />
+        </Toggleable>
       </div>
     )
   }
@@ -131,17 +104,16 @@ const App = () => {
   return (
     <div>
       
-      <h1>Blogs</h1>
+      <h1>Blogs App</h1>
       <p>Logged in as {user.name} <input type="submit" onClick={handleLogout} value="Logout"/></p>
-      <h2>Add Blog</h2>
-      {
-        addBlogSection()
-      }
+      <Toggleable buttonLabel="Add a new blog">
+        <AddBlog toggleUpdateBlogs={toggleUpdateBlogs}/>
+      </Toggleable>
       <h2>List</h2>
       <ul>
         {
           blogs.map(ele => {
-            return <Blog key={ele.id} blogObj={ele} handleDelete={handleBlogDelete}/>
+            return <Blog key={ele.id} blogObj={ele} toggleUpdateBlogs={toggleUpdateBlogs} handleDelete={handleBlogDelete}/>
           })
         }
       </ul>
