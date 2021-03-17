@@ -62,19 +62,6 @@ const App = () => {
     window.localStorage.removeItem('blogUser')
   }
 
-  const handleBlogDelete = async (e) => {
-    const id = e.target.name
-    try {
-      await blogService.deleteBlog(id)
-      setUpdateBlogs(!updateBlogs)
-    } catch(err) {
-      setErrorMsg('Problem deleting the blog.')
-      setTimeout(() => {
-        setErrorMsg('')
-      }, 2500)
-    }
-  }
-
   function toggleUpdateBlogs() {
     setUpdateBlogs(!updateBlogs)
   }
@@ -110,10 +97,15 @@ const App = () => {
         <AddBlog toggleUpdateBlogs={toggleUpdateBlogs}/>
       </Toggleable>
       <h2>List</h2>
+      {
+        errorMsg === ''
+        ? null
+        : <ErrorMessage msg={errorMsg} />
+      }
       <ul>
         {
           blogs.map(ele => {
-            return <Blog key={ele.id} blogObj={ele} toggleUpdateBlogs={toggleUpdateBlogs} handleDelete={handleBlogDelete}/>
+            return <Blog key={ele.id} blogObj={ele} toggleUpdateBlogs={toggleUpdateBlogs}/>
           })
         }
       </ul>
