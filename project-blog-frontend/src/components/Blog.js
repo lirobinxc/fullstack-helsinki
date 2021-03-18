@@ -1,45 +1,46 @@
-import React, { useState } from 'react'
+import React from 'react'
 import blogService from '../services/blogService'
+import Toggleable from './Toggleable'
+import ResponsiveButtonAsync from './ResponsiveButtonAsync'
 
 const Blog = ({ blogObj, toggleUpdateBlogs }) => {
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [isError, setIsError] = useState(false)
-
   const handleDelete = async (e) => {
-    const id = e.target.name
-    setIsDeleting(true)
-    try {
-      await blogService.deleteBlog(id)
-      setIsDeleting(false)
-      toggleUpdateBlogs()
-    } catch(err) {
-      setIsError(true)
-      setTimeout(() => {
-        setIsDeleting(false)
-        setIsError(false)
-      }, 2500)
-    }
+    const id = blogObj.id
+    console.log(`📣 id ~`, id)
+    await blogService.deleteBlog(id)
+    toggleUpdateBlogs()
   }
 
-  const deleteButton = () => (
-    <input type="button" name={blogObj.id} value="Delete" onClick={handleDelete}/>
-  )
+  const handleLike = async (e) => {
+    const id = e.target.name
+    await blogService.
+  }
 
-  const errorMsg = () => (
-    <span style={{color:"red", fontWeight:"bold"}}>Error deleting this blog</span> 
-  )
+  const listStyle = {
+    border: "2px solid black",
+    padding: "0.5em",
+    margin: "0.5em"
+  }
+  const buttonStyle = {
+    marginLeft: "1em",
+  }
 
   return (
-    <li>
-      <span style={{color:"blue", fontWeight:"bold"}}>{blogObj.title}</span> - {blogObj.author} - <span style={{color:"green"}}>Likes: {blogObj.likes}</span>
-      &nbsp; {
-        isError === true
-          ? errorMsg()
-          : isDeleting === true
-            ? <span style={{color:"red", fontWeight:"bold"}}>Deleting blog...</span>
-            : deleteButton()
-      }
-    </li>
+    
+      <li style={listStyle}>
+        <span style={{color:"blue", fontWeight:"bold"}}>{blogObj.title}</span>
+        <ResponsiveButtonAsync name="Delete" loadingText="Deleting..." errorMessage="Problem occured deleting this blog." onClick={handleDelete} id={blogObj.id} style={buttonStyle}/>
+        <Toggleable buttonLabel="View Details">
+          <div>
+            <div>{blogObj.author}</div>
+            <div>{blogObj.url}</div>
+            <div style={{color:"green"}}>
+              Likes: {blogObj.likes}
+              <input style={buttonStyle} name={blogObj.id} type="button" value="Like" onClick={handleLike}/>
+            </div>
+          </div>
+        </Toggleable>
+      </li>
   )
 }
 

@@ -90,9 +90,9 @@ const App = () => {
 
   return (
     <div>
-      
       <h1>Blogs App</h1>
       <p>Logged in as {user.name} <input type="submit" onClick={handleLogout} value="Logout"/></p>
+
       <Toggleable buttonLabel="Add a new blog">
         <AddBlog toggleUpdateBlogs={toggleUpdateBlogs}/>
       </Toggleable>

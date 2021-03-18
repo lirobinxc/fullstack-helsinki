@@ -57,7 +57,7 @@ const AddBlog = ({ toggleUpdateBlogs }) => {
         <input type="submit" />
         <input type="button" value="Focus Title" onClick={focusTitle}/>
         <h3 style={{color:"green"}}>The current title is: {title}</h3>
-        <h3 style={{color:"green"}}>The previous title is: {prevTitle.current}</h3>
+        <h3 style={{color:"green"}}>The previous title was: {prevTitle.current}</h3>
       </form>
     </div>
   )
