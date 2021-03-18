@@ -24,7 +24,7 @@ const AddBlog = ({ toggleUpdateBlogs }) => {
     }
     try {
       const newBlog = await blogService.postBlog(blogData)
-      console.log(`📣 newBlog ~`, newBlog)
+      console.log('📣 newBlog ~', newBlog)
       toggleUpdateBlogs()
       setTitle('')
       setAuthor('')
@@ -38,7 +38,7 @@ const AddBlog = ({ toggleUpdateBlogs }) => {
   }
 
   function focusTitle() {
-    titleRef.current.value = "Fun Times for All"
+    titleRef.current.value = 'Fun Times for All'
     titleRef.current.focus()
   }
 
@@ -56,8 +56,8 @@ const AddBlog = ({ toggleUpdateBlogs }) => {
         URL: <input type="text" name="blogUrl" value={url} onChange={(e) => setUrl(e.target.value)} /> <br/>
         <input type="submit" />
         <input type="button" value="Focus Title" onClick={focusTitle}/>
-        <h3 style={{color:"green"}}>The current title is: {title}</h3>
-        <h3 style={{color:"green"}}>The previous title was: {prevTitle.current}</h3>
+        <h3 style={{ color:'green' }}>The current title is: {title}</h3>
+        <h3 style={{ color:'green' }}>The previous title was: {prevTitle.current}</h3>
       </form>
     </div>
   )

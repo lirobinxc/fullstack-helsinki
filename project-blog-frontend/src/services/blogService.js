@@ -34,11 +34,22 @@ const deleteBlog = async (id) => {
   return req
 }
 
+const updateBlog = async (id, body) => {
+  const config = {
+    headers: {
+      'Authorization': `bearer ${token}`
+    }
+  }
+  const req = await axios.put(`${URL}/${id}`, body, config)
+  return req
+}
+
 const blogService = {
   setToken,
   getAll,
   token,
   postBlog,
+  updateBlog,
   deleteBlog,
 }
 
