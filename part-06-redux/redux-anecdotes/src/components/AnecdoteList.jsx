@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { voteAction } from '../reducers/anecdoteReducer';
+import {
+  deleteNoteAction,
+  initiateDbAction,
+  voteAction,
+} from '../reducers/anecdoteReducer';
 import { notifyVote, notifyOff } from '../reducers/notificationReducer';
+import { getAll } from '../services/anecdoteService';
 
 let timer;
 
@@ -19,6 +24,15 @@ const AnecdoteList = () => {
     }, 3000);
   };
 
+  const handleDelete = (anecdote) => {
+    const id = anecdote.id;
+    dispatch(deleteNoteAction(id));
+  };
+
+  useEffect(() => {
+    getAll().then((data) => dispatch(initiateDbAction(data)));
+  }, [dispatch]);
+
   const filteredAnecdotes = anecdotes.filter((ele) =>
     ele.content.toLowerCase().includes(filter.toLowerCase())
   );
@@ -35,7 +49,8 @@ const AnecdoteList = () => {
               {anecdote.votes}
             </span>
             &nbsp;
-            <button onClick={(e) => handleClick(anecdote)}>vote</button>
+            <button onClick={(e) => handleClick(anecdote)}>Vote</button>
+            <button onClick={(e) => handleDelete(anecdote)}>Delete</button>
           </div>
         </div>
       ))}

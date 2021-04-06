@@ -1,3 +1,5 @@
+import { deleteNote, getAll, postNote } from '../services/anecdoteService';
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -11,18 +13,22 @@ const generateId = () => (100000 * Math.random()).toFixed(0);
 
 const asObject = (anecdote) => {
   return {
-    content: anecdote,
     id: generateId(),
+    content: anecdote,
     votes: 0,
   };
 };
 
 const initialState = anecdotesAtStart.map(asObject);
 
-const anecdoteReducer = (state = initialState, action) => {
+const anecdoteReducer = (state = [], action) => {
   console.log('state now: ', state);
   console.log('action', action);
   switch (action.type) {
+    case 'RESTORE_DB':
+      return action.payload.data;
+    case 'INITIATE_DB':
+      return action.payload.data;
     case 'VOTE':
       const index = state.findIndex((ele) => ele.id === action.payload.id);
       if (index === -1) return state;
@@ -33,9 +39,22 @@ const anecdoteReducer = (state = initialState, action) => {
       return sortedState;
     case 'ADD_NEW':
       return [...state, asObject(action.payload.content)];
+    case 'DELETE':
+      return state.filter((ele) => ele.id !== action.payload.id);
     default:
       return state;
   }
+};
+
+// ACTION GENE
+
+export const initiateDbAction = (data) => {
+  return {
+    type: 'INITIATE_DB',
+    payload: {
+      data,
+    },
+  };
 };
 
 export const voteAction = (id) => {
@@ -57,6 +76,16 @@ export const addNoteAction = (e) => {
     },
   };
   return action;
+};
+
+export const deleteNoteAction = (id) => {
+  console.log('Deleted note:', id);
+  return {
+    type: 'DELETE',
+    payload: {
+      id,
+    },
+  };
 };
 
 export default anecdoteReducer;
